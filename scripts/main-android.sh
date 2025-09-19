@@ -198,6 +198,10 @@ while [ ${#enabled_library_list[@]} -gt $completed ]; do
         echo "${library}: already built"
       fi
     else
+      # 이미 빌드되었거나 의존성이 충족되지 않은 경우에도 completed를 증가시켜야 함
+      if [[ "${!BUILD_COMPLETED_FLAG}" == "1" ]]; then
+        ((completed += 1))
+      fi
       echo -e "INFO: Skipping $library, dependencies built=$run, already built=${!BUILD_COMPLETED_FLAG}\n" 1>>"${BASEDIR}"/build.log 2>&1
     fi
   done
