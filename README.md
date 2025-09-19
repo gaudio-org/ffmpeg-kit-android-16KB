@@ -16,6 +16,61 @@ OR
 implementation("com.moizhassan.ffmpeg:ffmpeg-kit-16kb:6.0.0") //build.gradle.kts
 ```
 
+## 📦 Building AAR from Source
+
+If you want to build your own AAR file with specific libraries enabled, you can use the automated build script.
+
+### Prerequisites
+
+1. **Android SDK & NDK**: Make sure you have Android SDK and NDK installed
+2. **Environment Variables**: Set the following environment variables:
+   ```bash
+   export ANDROID_SDK_ROOT=~/Library/Android/sdk
+   export ANDROID_NDK_ROOT=~/Library/Android/sdk/ndk/23.1.7779620
+   ```
+
+### Quick Build Command
+
+To build an AAR with essential libraries (lame for MP3, android-zlib for compression, android-media-codec for hardware acceleration):
+
+```bash
+./build-aar.sh --enable-lame --enable-android-zlib --enable-android-media-codec
+```
+
+### Available Library Options
+
+- `--enable-lame`: Enable MP3 encoding/decoding support
+- `--enable-android-zlib`: Enable compression support
+- `--enable-android-media-codec`: Enable hardware video encoding/decoding
+- `--disable-lib-srt`: Disable SRT library (recommended to avoid build issues)
+- `--disable-lib-gnutls`: Disable GnuTLS library (recommended to avoid build issues)
+
+### Example Build Commands
+
+**Minimal build with essential features:**
+```bash
+./build-aar.sh --enable-lame --enable-android-zlib --enable-android-media-codec --disable-lib-srt --disable-lib-gnutls
+```
+
+**Full build (may encounter some library conflicts):**
+```bash
+./build-aar.sh --full --disable-lib-srt --disable-lib-gnutls
+```
+
+### Output
+
+The built AAR file will be located at:
+```
+android/ffmpeg-kit-android-lib/build/outputs/aar/ffmpeg-kit-release.aar
+```
+
+### Troubleshooting
+
+- **CMake version issues**: Some libraries may fail due to CMake version compatibility. Disable problematic libraries using `--disable-lib-<library-name>`
+- **Dependency conflicts**: If certain libraries fail to build, they will be automatically skipped and the build will continue with available libraries
+- **Infinite loop fix**: The build script has been updated to prevent infinite loops during the build process
+
+
 ---
 
 # ORIGINAL README ⬇️
